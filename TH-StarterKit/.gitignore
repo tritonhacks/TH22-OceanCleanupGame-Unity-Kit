@@ -58,3 +58,6 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# Project Version
+TH-StarterKit\ProjectSettings\ProjectVersion.txt
+
