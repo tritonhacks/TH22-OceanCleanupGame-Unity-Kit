@@ -11,6 +11,7 @@ public class BoatMovement : MonoBehaviour
     public float speed;
     public float rotation_speed;
     public float drag;
+    public float minDist;
 
     [Header("Raycast")]
     public LayerMask floorLayer;
@@ -40,7 +41,7 @@ public class BoatMovement : MonoBehaviour
         float distance = Vector3.Distance(transform.position, targetPos);
         Vector3 direction = (targetPos - transform.position).normalized;
 
-        if (distance > 2f)
+        if (distance > minDist)
         {
             //rotation
             Quaternion rot = Quaternion.LookRotation(direction);
