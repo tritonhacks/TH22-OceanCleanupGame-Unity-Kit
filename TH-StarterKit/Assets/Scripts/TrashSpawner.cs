@@ -24,6 +24,7 @@ public class TrashSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        cam = Camera.main;
         calculateCorners();
 
         // Spawn trash at start of game

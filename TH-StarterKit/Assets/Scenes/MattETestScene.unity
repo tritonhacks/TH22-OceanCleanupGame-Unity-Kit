@@ -199,13 +199,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 41424962}
-  m_LocalRotation: {x: 0.3826837, y: -0, z: -0, w: 0.9238795}
-  m_LocalPosition: {x: 0, y: 8, z: -8}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &798627996
 GameObject:
   m_ObjectHideFlags: 0
@@ -310,7 +310,7 @@ GameObject:
   - component: {fileID: 839175644}
   - component: {fileID: 839175643}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -332,11 +332,12 @@ MonoBehaviour:
   - {fileID: 3805749377576879895, guid: be7978a7b5ee36447973823fa62fb8e8, type: 3}
   - {fileID: 8423375105516527143, guid: 50ab13280701b7d479bcde3cd08c25d2, type: 3}
   boat: {fileID: 1780502298}
-  cam: {fileID: 41424964}
+  cam: {fileID: 0}
   floorLayer:
     serializedVersion: 2
     m_Bits: 64
-  minSpawnDist: 0
+  minSpawnDist: 2
+  screenEdgeOffset: 2
 --- !u!4 &839175644
 Transform:
   m_ObjectHideFlags: 0
@@ -356,6 +357,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5531635989305671668, guid: 971e8984acc248847b85a3302900d3b8, type: 3}
   m_PrefabInstance: {fileID: 5531635988670247150}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1780502305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1780502298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7e652f6a873e6841a0ec031c5a7e1c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxStorage: 3
+  diskSpawnX: 0
+  diskSpawnY: 0
+  diskSpawnZ: 0
+  ts: {fileID: 0}
 --- !u!1 &1993917283
 GameObject:
   m_ObjectHideFlags: 0
@@ -506,6 +524,10 @@ PrefabInstance:
     - target: {fileID: 5531635989305671668, guid: 971e8984acc248847b85a3302900d3b8, type: 3}
       propertyPath: m_Name
       value: Boat
+      objectReference: {fileID: 0}
+    - target: {fileID: 5531635989305671669, guid: 971e8984acc248847b85a3302900d3b8, type: 3}
+      propertyPath: speed
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 971e8984acc248847b85a3302900d3b8, type: 3}
