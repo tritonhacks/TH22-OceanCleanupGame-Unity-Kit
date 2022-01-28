@@ -4,29 +4,36 @@ using UnityEngine;
 
 public class CollisionHandling : MonoBehaviour
 {
-    int trashHeld = 0;
+    public int maxStorage;
+    private int trashHeld = 0;
+
     //Need to HardCode this with location of Port
-    int diskSpawnX = 0;
-    int diskSpawnY = 0;
-    int diskSpawnZ = 0;
-    bool diskSpawned = false;
+    [SerializeField] float diskSpawnX = 0;
+    [SerializeField] float diskSpawnY = 0;
+    [SerializeField] float diskSpawnZ = 0;
+    private bool diskSpawned = false;
+
+    public TrashSpawner ts;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        ts = FindObjectOfType<TrashSpawner>();
     }
 
 
-    //Delete Collected Trash (up to 10 items) and Drops off Trash at Port
+    //Delete Collected Trash
     void OnCollisionEnter(Collision collision)
     {
-        //Collects trash until 10 items
-        if (trashHeld <= 9)
+        //Collects trash until storage full
+        if (trashHeld < maxStorage)
         {
+            Debug.Log("Hit Object");
             if (collision.gameObject.tag == "Trash")
             {
                 trashHeld++;
                 Destroy(collision.gameObject);
+                ts.spawnNewTrash();
             }
         }
     }
@@ -37,7 +44,7 @@ public class CollisionHandling : MonoBehaviour
     {
         GameObject dropOffLocation = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         dropOffLocation.transform.position = new Vector3(diskSpawnX, diskSpawnY, diskSpawnZ);
-        dropOffLocation.transform.localScale = new Vector3((float)15, (float)0.5, (float)15);
+        dropOffLocation.transform.localScale = new Vector3(15f, 0.5f, 15f);
 
         //Changes Color of Disk to Red
         var diskRenderer = dropOffLocation.GetComponent<Renderer>();
@@ -48,7 +55,7 @@ public class CollisionHandling : MonoBehaviour
     void Update()
     {
         //If ship is full, create Drop Off Location
-        if (!diskSpawned &&  trashHeld >= 10)
+        if (!diskSpawned &&  trashHeld >= maxStorage)
         {
             diskSpawned = true;
             CreateDropOffLocation();

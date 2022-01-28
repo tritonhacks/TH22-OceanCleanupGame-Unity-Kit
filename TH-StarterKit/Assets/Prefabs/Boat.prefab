@@ -158,10 +158,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 5531635989305671666}
-  speed: 2.5
-  rotation_speed: 4
+  speed: 2
+  rotation_speed: 5
   drag: 5
-  minDist: 2
+  minDist: 1.5
   floorLayer:
     serializedVersion: 2
     m_Bits: 64
