@@ -4,61 +4,83 @@ using UnityEngine;
 
 public class CollisionHandling : MonoBehaviour
 {
-    public int maxStorage;
+    public int maxCapacity;
     private int trashHeld = 0;
+    private bool spawnTrash = false;
 
-    //Need to HardCode this with location of Port
-    [SerializeField] float diskSpawnX = 0;
-    [SerializeField] float diskSpawnY = 0;
-    [SerializeField] float diskSpawnZ = 0;
-    private bool diskSpawned = false;
+    private bool dockSpawned = false;
+
+    public GameObject dock;
+    public Vector3 spawnL, spawnR;
 
     public TrashSpawner ts;
+    public UIHandling ui;
 
     // Start is called before the first frame update
     void Start()
     {
         ts = FindObjectOfType<TrashSpawner>();
+        ui = FindObjectOfType<UIHandling>();
+
+        // Setup dock as not spawned
+        dock.SetActive(false);
     }
 
 
     //Delete Collected Trash
     void OnCollisionEnter(Collision collision)
     {
-        //Collects trash until storage full
-        if (trashHeld < maxStorage)
+
+        if (trashHeld == maxCapacity && collision.gameObject.tag == "Dock")
         {
-            Debug.Log("Hit Object");
+            trashHeld = 0;
+            ui.ResetTrashCount();
+            dock.SetActive(false);
+            dockSpawned = false;
+        }
+        //Collects trash until storage full
+        
+        if (trashHeld < maxCapacity)
+        {
+            Debug.Log("Hit Object: " + collision.gameObject.ToString());
             if (collision.gameObject.tag == "Trash")
             {
                 trashHeld++;
+                ui.IncrementTrashCount();
                 Destroy(collision.gameObject);
-                ts.spawnNewTrash();
+                spawnTrash = true;
             }
         }
+
+        
     }
 
-
-    //Spawns Disk at Location diskSpawnX, diskSpawnY, diskSpawnZ and Colors it
-    void CreateDropOffLocation()
+    void SetDropOffLocation()
     {
-        GameObject dropOffLocation = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        dropOffLocation.transform.position = new Vector3(diskSpawnX, diskSpawnY, diskSpawnZ);
-        dropOffLocation.transform.localScale = new Vector3(15f, 0.5f, 15f);
+        // Have dock spawn on opposite side of boat to prevent dock spawning in boat
+        if (this.transform.position.x < Camera.main.transform.position.x)
+            dock.transform.position = spawnR;
+        else
+            dock.transform.position = spawnL;
 
-        //Changes Color of Disk to Red
-        var diskRenderer = dropOffLocation.GetComponent<Renderer>();
-        diskRenderer.material.SetColor("_Color", Color.red);
+        dock.SetActive(true);
     }
 
     // Update is called once per frame
     void Update()
     {
         //If ship is full, create Drop Off Location
-        if (!diskSpawned &&  trashHeld >= maxStorage)
+        if (!dockSpawned && trashHeld == maxCapacity)
         {
-            diskSpawned = true;
-            CreateDropOffLocation();
+            ui.SetFullTextActive(true);
+            dockSpawned = true;
+            SetDropOffLocation();
+        }
+
+        else if (spawnTrash && trashHeld < maxCapacity)
+        {
+            ts.spawnNewTrash();
+            spawnTrash = false;
         }
     }
 }

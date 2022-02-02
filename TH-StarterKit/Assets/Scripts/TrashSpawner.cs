@@ -26,10 +26,6 @@ public class TrashSpawner : MonoBehaviour
     {
         cam = Camera.main;
         calculateCorners();
-
-        // Spawn trash at start of game
-        // TODO: If doing UI, move to UI script for when game starts
-        spawnNewTrash();
     }
 
     // Update is called once per frame
@@ -40,21 +36,26 @@ public class TrashSpawner : MonoBehaviour
 
     public void spawnNewTrash()
     {
+        // Set spawn coordinates
+        Vector3 randomPos = createRandomPos();
+
+        // Spawn new trash
+        Instantiate(trash[Random.Range(0, trash.Length)], randomPos, Quaternion.identity);
+    }
+
+    private Vector3 createRandomPos()
+    {
         // Calculate spawn position offset
         float randomX = Random.Range(screenEdgeOffset, sceneWidth - screenEdgeOffset);
         float randomZ = Random.Range(screenEdgeOffset, sceneHeight - screenEdgeOffset);
 
         // Check distance from boat, adjust if too close
         if (upperLeft.x + randomX - boat.transform.position.x <= minSpawnDist)
-            randomX = (randomX + (sceneWidth/2)) % sceneWidth;
+            randomX = (randomX + (sceneWidth / 2)) % sceneWidth;
         if (lowerLeft.z + randomZ - boat.transform.position.z <= minSpawnDist)
-            randomZ = (randomZ + (sceneHeight/2)) % sceneHeight;
+            randomZ = (randomZ + (sceneHeight / 2)) % sceneHeight;
 
-        // Set spawn coordinates
-        Vector3 randomPos = new Vector3(upperLeft.x + randomX, 0.5f, lowerLeft.z + randomZ);
-
-        // Spawn new trash
-        Instantiate(trash[Random.Range(0, trash.Length)], randomPos, Quaternion.identity);
+        return new Vector3(upperLeft.x + randomX, 0.5f, lowerLeft.z + randomZ);
     }
 
     private void calculateCorners()
