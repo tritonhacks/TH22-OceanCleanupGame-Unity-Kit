@@ -57,7 +57,6 @@ public class TrashSpawner : MonoBehaviour
             randomZ = Random.Range(lowerLeft.z + screenEdgeOffset, upperLeft.z - screenEdgeOffset);
 
             validSpawn = spawnCheck(randomX, randomZ);
-            Debug.Log(validSpawn);
             iter++;
         }       
 
@@ -71,11 +70,7 @@ public class TrashSpawner : MonoBehaviour
         // Check distance from boat, mark if too close
         if (Math.Abs(x - boat.transform.position.x) <= minSpawnDist &&
             Math.Abs(z - boat.transform.position.z) <= minSpawnDist)
-        {
             clear = false;
-            Debug.Log("Boat");
-            Debug.Log("x: " + x + " \nz: " + z);
-        }
 
 
         // Check distance from screen edges, mark if too close
