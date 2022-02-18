@@ -61,7 +61,7 @@ public class TrashSpawner : MonoBehaviour
             iter++;
         }       
 
-        return new Vector3(randomX, 0.5f, randomZ);
+        return new Vector3(randomX, 0.25f, randomZ);
     }
 
     private bool spawnCheck(float x, float z)
