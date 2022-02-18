@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class TrashSpawner : MonoBehaviour
 {
@@ -17,9 +19,6 @@ public class TrashSpawner : MonoBehaviour
     private Vector3 lowerLeft;
     private Vector3 upperRight;
     private Vector3 lowerRight;
-
-    private float sceneWidth;
-    private float sceneHeight;
 
     // Start is called before the first frame update
     void Start()
@@ -45,27 +44,56 @@ public class TrashSpawner : MonoBehaviour
 
     private Vector3 createRandomPos()
     {
-        // Calculate spawn position offset
-        float randomX = Random.Range(screenEdgeOffset, sceneWidth - screenEdgeOffset);
-        float randomZ = Random.Range(screenEdgeOffset, sceneHeight - screenEdgeOffset);
+        bool validSpawn = false;
+        int iter = 0;
+        float randomX = 0f;
+        float randomZ = 0f;
+        
+        // Create new spawn locations until one is valid or max iterations reached
+        while(validSpawn == false && iter <= 5)
+        {
+            // Calculate spawn position offset
+            randomX = Random.Range(upperLeft.x + screenEdgeOffset, upperRight.x - screenEdgeOffset);
+            randomZ = Random.Range(lowerLeft.z + screenEdgeOffset, upperLeft.z - screenEdgeOffset);
 
-        // Check distance from boat, adjust if too close
-        if (upperLeft.x + randomX - boat.transform.position.x <= minSpawnDist)
-            randomX = (randomX + (sceneWidth / 2)) % sceneWidth;
-        if (lowerLeft.z + randomZ - boat.transform.position.z <= minSpawnDist)
-            randomZ = (randomZ + (sceneHeight / 2)) % sceneHeight;
+            validSpawn = spawnCheck(randomX, randomZ);
+            Debug.Log(validSpawn);
+            iter++;
+        }       
 
-        return new Vector3(upperLeft.x + randomX, 0.5f, lowerLeft.z + randomZ);
+        return new Vector3(randomX, 0.5f, randomZ);
+    }
+
+    private bool spawnCheck(float x, float z)
+    {
+        bool clear = true;
+
+        // Check distance from boat, mark if too close
+        if (Math.Abs(x - boat.transform.position.x) <= minSpawnDist &&
+            Math.Abs(z - boat.transform.position.z) <= minSpawnDist)
+        {
+            clear = false;
+            Debug.Log("Boat");
+            Debug.Log("x: " + x + " \nz: " + z);
+        }
+
+
+        // Check distance from screen edges, mark if too close
+        if (x - upperLeft.x <= minSpawnDist)
+            clear = false; //Left edge
+            
+        if (upperRight.x - x <= minSpawnDist) //Right edge
+            clear = false; //Right edge
+        if (upperLeft.z - z <= minSpawnDist) //Top edge
+            clear = false; //Top edge
+        if (z - lowerLeft.z <= minSpawnDist) //Bottom edge
+            clear = false; //Bottom edge
+
+        return clear;
     }
 
     private void calculateCorners()
     {
-        // Bottom left of screen defined at (0,0), top right at (Screen.width, Screen.height)
-        Vector3 upperLeftScreen = cam.ScreenToWorldPoint(new Vector2 (0, Screen.height));
-        Vector3 lowerLeftScreen = cam.ScreenToWorldPoint(new Vector2(0, 0));
-        Vector3 upperRightScreen = cam.ScreenToWorldPoint(new Vector2(Screen.width, Screen.height));
-        Vector3 lowerRightScreen = cam.ScreenToWorldPoint(new Vector2(Screen.width, 0));
-
         RaycastHit hit;
         Ray upperLeftRay = cam.ScreenPointToRay(new Vector2(0, Screen.height));
         Ray lowerLeftRay = cam.ScreenPointToRay(new Vector2(0, 0));
@@ -91,8 +119,5 @@ public class TrashSpawner : MonoBehaviour
         {
             lowerRight = hit.point;
         }
-
-        sceneHeight = upperLeft.z - lowerLeft.z;
-        sceneWidth = upperRight.x - upperLeft.x;
     }
 }
