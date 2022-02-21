@@ -12,6 +12,7 @@ public class TrashSpawner : MonoBehaviour
 
     public LayerMask floorLayer;
     public float minSpawnDist;
+    public int maxIters;
     public float screenEdgeOffset;
 
     // Corners of screen on water
@@ -50,41 +51,22 @@ public class TrashSpawner : MonoBehaviour
         float randomZ = 0f;
         
         // Create new spawn locations until one is valid or max iterations reached
-        while(validSpawn == false && iter <= 5)
+        while(validSpawn == false && iter < maxIters)
         {
             // Calculate spawn position offset
             randomX = Random.Range(upperLeft.x + screenEdgeOffset, upperRight.x - screenEdgeOffset);
             randomZ = Random.Range(lowerLeft.z + screenEdgeOffset, upperLeft.z - screenEdgeOffset);
 
-            validSpawn = spawnCheck(randomX, randomZ);
+            if (!(Math.Abs(randomX - boat.transform.position.x) <= minSpawnDist &&
+            Math.Abs(randomZ - boat.transform.position.z) <= minSpawnDist))
+            {
+                validSpawn = true;
+            }
+
             iter++;
         }       
 
         return new Vector3(randomX, 0.25f, randomZ);
-    }
-
-    private bool spawnCheck(float x, float z)
-    {
-        bool clear = true;
-
-        // Check distance from boat, mark if too close
-        if (Math.Abs(x - boat.transform.position.x) <= minSpawnDist &&
-            Math.Abs(z - boat.transform.position.z) <= minSpawnDist)
-            clear = false;
-
-
-        // Check distance from screen edges, mark if too close
-        if (x - upperLeft.x <= minSpawnDist)
-            clear = false; //Left edge
-            
-        if (upperRight.x - x <= minSpawnDist) //Right edge
-            clear = false; //Right edge
-        if (upperLeft.z - z <= minSpawnDist) //Top edge
-            clear = false; //Top edge
-        if (z - lowerLeft.z <= minSpawnDist) //Bottom edge
-            clear = false; //Bottom edge
-
-        return clear;
     }
 
     private void calculateCorners()

@@ -43,6 +43,8 @@ public class UIHandling : MonoBehaviour
 
     public void StartGame()
     {
+        gameStarted = true;
+
         startGameText.gameObject.SetActive(false);
         trashHeldText.gameObject.SetActive(true);
         trashCapacityText.gameObject.SetActive(true);

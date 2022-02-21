@@ -42,7 +42,6 @@ public class CollisionHandling : MonoBehaviour
         
         if (trashHeld < maxCapacity)
         {
-            Debug.Log("Hit Object: " + collision.gameObject.ToString());
             if (collision.gameObject.tag == "Trash")
             {
                 trashHeld++;
