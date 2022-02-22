@@ -240,6 +240,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   minSpawnDist: 2
+  maxIters: 5
   screenEdgeOffset: 2
 --- !u!4 &287897765
 Transform:
